@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+
+
+  <!-- Elsevier Pure Missouri S&T concept
+        Note: Implementation details may vary. Based roughly on the wireframe presented on Elsevier's theme customization guide and compared against other Elsevier Pure implementations.
+        Not the actual code. How it's implemented in the system may be different. Consider this a visual proposal. Contact woehlkej@mst.edu with questions.-->
+
+
+
+<meta charset="UTF-8">
+<title>Scholars' Mine — Modern Concept</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --forest:#154734; --forest-deep:#0f3527; --miner:#007A33; --lima:#72BF44;
+    --kiwi:#BFD730; --cyprus:#003B49; --shuttle:#63666A; --pebble:#D6D1CA;
+    --page-bg:#f6f6f6; --card:#ffffff; --ink:#22271f; --muted:#5c6159;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0; background:var(--page-bg); color:var(--ink);
+    font-family:"Libre Franklin",Arial,sans-serif; font-size:15px; line-height:1.65;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:var(--miner); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+
+  .page-wrap{max-width:1280px; margin:0 auto; background:var(--card);
+    box-shadow:0 10px 25px rgba(0,0,0,.1);}
+
+  /* eyebrow motif */
+  .eyebrow{display:inline-flex; align-items:center; gap:10px; font-size:12px;
+    font-weight:700; letter-spacing:.16em; text-transform:uppercase; color:var(--miner); margin:0 0 12px;}
+  .eyebrow::before{content:""; width:26px; height:8px; background-image:repeating-linear-gradient(-45deg,
+    var(--kiwi) 0 2px, transparent 2px 5px);}
+
+  /* ===== HEADER ===== */
+  .cover{position:relative; overflow:hidden; min-height:150px; display:flex; flex-direction:column;
+    background:var(--forest);
+    border-bottom:3px solid var(--kiwi);}
+  .cover::before{content:""; position:absolute; top:0; right:0; bottom:0; width:70%;
+    background-image:
+      repeating-linear-gradient(-45deg, rgba(191,215,48,.5) 0 2px, transparent 2px 45px),
+      repeating-linear-gradient(-45deg, rgba(191,215,48,.28) 0 1.5px, transparent 1.5px 9px);
+    -webkit-mask-image:radial-gradient(135% 90% at 100% 100%, #000 0%, #000 18%, transparent 66%);
+    mask-image:radial-gradient(135% 90% at 100% 100%, #000 0%, #000 10%, transparent 60%);
+    pointer-events:none;}
+  .cover-inner{position:relative; z-index:1; flex:1; display:flex; align-items:center;
+    justify-content:space-between; padding:35px 46px;}
+  .brandline{display:flex; align-items:baseline; gap:18px; flex-wrap:wrap;}
+  .cover h1{margin:0; color:#fff; font-weight:600; font-size:44px; letter-spacing:-.02em; line-height:1;}
+  .tagline{color:var(--kiwi); font-weight:700; font-size:14px; letter-spacing:.22em; text-transform:uppercase;}
+  .cover .sub{margin:4px 0 0; color:#d7e7dd; font-size:15px; font-weight:400; margin-bottom: 16px;}
+  .cover-logo img{height:82px; filter:brightness(0) invert(1);}
+
+  /* ===== NAV (kiwi, sidebar-aligned) ===== */
+  .utility-nav{position:relative; z-index:5;}
+  .utility-nav ul{position:absolute; top:-24px; left:0; width:280px; margin:0;
+    box-sizing:border-box; list-style:none; display:flex; gap:6px; padding:0 22px;
+    background:var(--kiwi); border-radius:0 4px 4px 0; box-shadow:0 6px 16px rgba(21,71,52,.22);}
+  .utility-nav a{display:block; padding:11px 5px; color:var(--forest); font-size:12.5px;
+    font-weight:700; letter-spacing:.02em; border-bottom:3px solid transparent; transition:border-color .15s;}
+  .utility-nav a:hover{color:var(--forest); text-decoration:none; border-bottom-color:var(--forest);}
+
+  /* ===== BODY ===== */
+  .page-body{display:flex; align-items:flex-start;}
+
+  /* sidebar */
+  .sidebar{width:280px; flex-shrink:0; padding:44px 30px 40px; background:#fbfbf9;
+    border-right:1px solid #ecece6;border-bottom:1px solid #ecece6;border-bottom-right-radius:6px;}
+  .side-h{font-size:12px; font-weight:700; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--forest); margin:30px 0 14px; display:flex; align-items:center; gap:8px;}
+  .side-h:first-of-type{margin-top:0;}
+  .side-h::after{content:""; flex:1; height:2px; background:linear-gradient(to right,var(--kiwi),transparent);}
+  .searchbox{display:flex; align-items:center; background:#fff; border:1px solid #e0ddd4;
+    border-radius:999px; padding:4px 4px 4px 16px; box-shadow:0 1px 2px rgba(0,0,0,.05);
+    transition:box-shadow .15s,border-color .15s;}
+  .searchbox:focus-within{border-color:var(--lima); box-shadow:0 0 0 3px rgba(114,191,68,.18);}
+  .searchbox input{flex:1; border:none; outline:none; font-size:14px; background:transparent; min-width:0;}
+  .searchbox button{border:none; cursor:pointer; background:var(--miner); color:#fff;
+    width:34px; height:34px; border-radius:50%; font-size:15px; flex-shrink:0; transition:background .15s;}
+  .searchbox button:hover{background:var(--forest);}
+  .side-scope{margin:12px 0 4px; font-size:13px; color:var(--muted);}
+  .side-scope select{width:100%; margin-top:6px; padding:8px 10px; border:1px solid #e0ddd4;
+    border-radius:8px; font-size:13px; font-weight:600; color:var(--forest); background:#fff;}
+  .side-links{display:flex; flex-direction:column; gap:9px; margin-top:4px;}
+  .side-links a{color:var(--forest); font-size:14px; font-weight:500; width:max-content;
+    border-bottom:1px solid transparent; transition:border-color .15s;}
+  .side-links a:hover{text-decoration:none; border-bottom-color:var(--kiwi);}
+  .side-mini{font-size:13px; color:var(--muted); margin:6px 0 0;}
+
+  /* main */
+  .main{flex:1; min-width:0; padding:40px 44px 52px;}
+
+  /* hero slideshow */
+  .hero{position:relative; width:100%; padding-bottom:46%; border-radius:12px; overflow:hidden;
+    background:var(--pebble); box-shadow:0 14px 34px rgba(21,71,52,.20); margin-bottom:34px;}
+  .hslide,.hslide.is-active{position:absolute; inset:0; background-size:cover; background-position:center 46%;
+    opacity:0; transition:opacity 1.1s ease-in-out;}
+  .hslide.is-active{opacity:1; animation:kb 7s ease-out forwards;}
+  @keyframes kb{from{transform:scale(1.005);}to{transform:scale(1.09);}}
+  .hero::after{content:""; position:absolute; inset:0; pointer-events:none;
+    background:linear-gradient(to top, rgba(15,53,39,.55) 0%, rgba(15,53,39,0) 34%);}
+  .hero-cap{position:absolute; left:24px; bottom:20px; z-index:3; color:#fff;
+    font-weight:700; letter-spacing:.04em; font-size:15px; text-shadow:0 1px 6px rgba(0,0,0,.5);}
+  .hdots{position:absolute; right:20px; bottom:20px; z-index:3; display:flex; gap:8px;}
+  .hdot{width:9px; height:9px; border:none; border-radius:50%; cursor:pointer; padding:0;
+    background:rgba(255,255,255,.55); box-shadow:0 0 3px rgba(0,0,0,.4); transition:background .2s,transform .2s;}
+  .hdot.is-active{background:var(--kiwi); transform:scale(1.25);}
+
+  /* metrics band */
+  .metrics{display:grid; grid-template-columns:repeat(4,1fr); gap:0; background:var(--forest);
+    border-radius:6px; overflow:hidden; margin-bottom:36px; box-shadow:0 10px 26px rgba(21,71,52,.18);}
+  .metric{background:var(--forest); padding:22px 20px; text-align:center;}
+  .metric .num{font-size:38px; font-weight:800; color:var(--kiwi); line-height:1; letter-spacing:-.01em;}
+  .metric .lab{margin-top:8px; font-size:11.5px; font-weight:600; letter-spacing:.1em;
+    text-transform:uppercase; color:#bcd4c6;}
+
+  /* mission strip */
+  .mission{background:var(--forest); border-radius:6px; padding:24px 26px; margin-bottom:40px;}
+  .mission .row{display:grid; grid-template-columns:repeat(4,1fr);}
+  .mission .item{text-align:center; padding:2px 20px; color:#fff; font-size:13px; font-weight:500; line-height:1.4;}
+  .mission .item + .item{border-left:2px solid var(--kiwi);}
+
+  /* collection cards */
+  .section{margin-bottom:44px;}
+  .section > h2{font-size:26px; font-weight:800; color:var(--forest); margin:0 0 22px; letter-spacing:-.01em;}
+  .cgrid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px;}
+  .ccard{position:relative; display:flex; flex-direction:column; align-items:center; text-align:center;
+    gap:12px; padding:22px 14px 20px; background:var(--card); border:1px solid #eceae3;
+    border-radius:6px; overflow:hidden; transition:transform .18s ease, box-shadow .18s ease, border-color .18s;}
+  .ccard::after{content:""; position:absolute; top:0; right:0; width:46px; height:46px;
+    background-image:repeating-linear-gradient(-45deg,var(--kiwi) 0 2px, transparent 2px 6px);
+    -webkit-mask-image:linear-gradient(225deg,#000 0%, transparent 62%);
+    mask-image:linear-gradient(225deg,#000 0%, transparent 62%);
+    opacity:0; transition:opacity .2s;}
+  .ccard:hover{transform:translateY(-5px); box-shadow:0 14px 26px rgba(21,71,52,.16);
+    border-color:#dfe6cf; text-decoration:none;}
+  .ccard:hover::after{opacity:.85;}
+  .ccard-icon img{width:80px; height:80px; object-fit:contain; display:block;}
+  .ccard-label{font-size:13.5px; font-weight:600; color:var(--cyprus); line-height:1.25;}
+
+  /* browse block */
+  .browse-head{display:flex; align-items:center; gap:14px; margin:0 0 16px;}
+  .browse-head h2{font-size:26px; font-weight:800; color:var(--forest); margin:0; letter-spacing:-.01em;}
+  .follow{background:var(--forest); color:#fff; font-size:11px; font-weight:700; letter-spacing:.06em;
+    text-transform:uppercase; padding:6px 13px; border-radius:999px;}
+  .browse-links{display:flex; flex-wrap:wrap; gap:12px; margin:0 0 20px; padding:0; list-style:none;}
+  .browse-links a{display:inline-flex; align-items:center; gap:8px; background:#f2f6ee;
+    border:1px solid #e2ecd6; color:var(--forest); font-weight:600; font-size:14px;
+    padding:10px 16px; border-radius:6px; transition:background .15s,border-color .15s,transform .15s;}
+  .browse-links a::before{content:"›"; color:var(--miner); font-weight:800;}
+  .browse-links a:hover{background:#e9f2df; border-color:var(--lima); transform:translateX(2px); text-decoration:none;}
+  .lead{font-size:15.5px; line-height:1.7; color:#3c423a; margin:0 0 6px;}
+
+  /* glance */
+  .glance{display:grid; grid-template-columns:1fr 1fr; gap:32px; margin-top:40px;
+    border-top:1px solid #eceae3; padding-top:28px;}
+  .glance h3{font-size:13px; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--forest); margin:0 0 14px;}
+  .glance .g-item{margin-bottom:14px;}
+  .glance .g-item a{font-weight:700; color:var(--forest);}
+  .glance .g-item span{display:block; font-size:13px; color:var(--muted);}
+
+  /* footer */
+  .footer{background:var(--forest); border-top:4px solid var(--kiwi); color:#d7e7dd; padding:34px 40px 26px;}
+  .footer-top{display:flex; gap:40px; align-items:flex-start; justify-content:space-between;}
+  .footer-logo img{height:96px; filter:brightness(0) invert(1); opacity:.95;}
+  .footer a{color:#d7e7dd;}
+  .footer nav a { margin-right: 18px; line-height: 2; font-size: 13.5px; }
+  .footer a:hover{color:var(--kiwi);}
+  .footer .copy{margin-top:18px; font-size:12px; color:#9fb6a8; border-top:1px solid rgba(255,255,255,.12); padding-top:14px;}
+
+  /* load fade-in */
+  .reveal{opacity:0; transform:translateY(10px); animation:rv .7s ease forwards;}
+  @keyframes rv{to{opacity:1; transform:none;}}
+  .r1{animation-delay:.05s;} .r2{animation-delay:.13s;} .r3{animation-delay:.21s;} .r4{animation-delay:.29s;}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none !important; transition:none !important;}
+    .reveal{opacity:1; transform:none;}
+    .hslide.is-active{animation:none;}
+  }
+</style>
+</head>
+<body>
+ <div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="cover">
+    <div class="cover-inner">
+      <div>
+        <div class="brandline">
+          <h1>Scholars' Mine</h1>
+          <span class="tagline">Showcase &middot; Share &middot; Advance</span>
+        </div>
+        <p class="sub">The institutional repository of Missouri University of Science and Technology</p>
+      </div>
+      <div class="cover-logo"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/logos/horizontal brief.png" alt="Missouri S&T"></div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="utility-nav">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">FAQ</a></li>
+      <li><a href="#">My Account</a></li>
+    </ul>
+  </div>
+
+  <div class="page-body">
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="side-h">Search</div>
+      <div class="searchbox">
+        <input type="text" aria-label="Search this repository" placeholder="Search Scholars' Mine">
+        <button type="button" aria-label="Search">&#9906;</button>
+      </div>
+      <div class="side-scope">
+        <select aria-label="Search scope"><option>in this repository</option><option>across all repositories</option></select>
+      </div>
+      <div class="side-links" style="margin-top:14px;">
+        <a href="#">Advanced Search</a>
+        <a href="#">Notify me via email or RSS</a>
+      </div>
+
+      <div class="side-h">Browse</div>
+      <div class="side-links">
+        <a href="#">Collections</a>
+        <a href="#">Disciplines</a>
+        <a href="#">Authors</a>
+      </div>
+
+      <div class="side-h">Author Corner</div>
+      <div class="side-links">
+        <a href="#">Author FAQ</a>
+        <a href="#">Submit Research</a>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main">
+
+      <!-- HERO SLIDESHOW -->
+      <div class="hero reveal r1" id="hero">
+          <div class="hslide is-active" role="img" aria-label="Curtis Laws Wilson Library" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/cover.jpg')"></div>
+          <div class="hslide" role="img" aria-label="Engineering Management" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/EngMan.jpg')"></div>
+          <div class="hslide" role="img" aria-label="Missouri S&T signage" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/GB%20logo.jpg')"></div>
+          <div class="hslide" role="img" aria-label="Havener Center" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/Havener.jpg')"></div>
+          <div class="hslide" role="img" aria-label="Campus entrance" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/Home%20sign.jpg')"></div>
+          <div class="hslide" role="img" aria-label="Innovation Lab" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/Innovation%20Lab.jpg')"></div>
+          <div class="hslide" role="img" aria-label="Stonehenge replica" style="background-image:url('https://raw.githubusercontent.com/userexec/mstelseviertheme/main/images/StoneH.jpg')"></div>
+        <div class="hero-cap" id="heroCap">Curtis Laws Wilson Library</div>
+        <div class="hdots">
+          <button type="button" class="hdot is-active" aria-label="Slide 1"></button>
+          <button type="button" class="hdot" aria-label="Slide 2"></button>
+          <button type="button" class="hdot" aria-label="Slide 3"></button>
+          <button type="button" class="hdot" aria-label="Slide 4"></button>
+          <button type="button" class="hdot" aria-label="Slide 5"></button>
+          <button type="button" class="hdot" aria-label="Slide 6"></button>
+          <button type="button" class="hdot" aria-label="Slide 7"></button>
+        </div>
+      </div>
+
+      <!-- MISSION -->
+      <div class="mission reveal r2">
+        <div class="row">
+          <div class="item">Increasing the visibility of S&amp;T's research</div>
+          <div class="item">Sharing the work of S&amp;T with the world</div>
+          <div class="item">Tracking impact and engagement of S&amp;T's work</div>
+          <div class="item">Preserving the scholarly and creative work of S&amp;T</div>
+        </div>
+      </div>
+
+      <!-- COLLECTION CARDS -->
+      <div class="section reveal r3">
+        <h2>Browse by collection type</h2>
+        <div class="cgrid">
+          <a class="ccard" href="#">
+            <span class="ccard-icon"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/icons/All Collections.png" alt=""></span>
+            <span class="ccard-label">All Collections</span>
+          </a>
+          <a class="ccard" href="#">
+            <span class="ccard-icon"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/icons/ST Scholarship.png" alt=""></span>
+            <span class="ccard-label">S&amp;T Scholarship</span>
+          </a>
+          <a class="ccard" href="#">
+            <span class="ccard-icon"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/icons/Campus Life.png" alt=""></span>
+            <span class="ccard-label">Campus Life</span>
+          </a>
+          <a class="ccard" href="#">
+            <span class="ccard-icon"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/icons/AI.png" alt=""></span>
+            <span class="ccard-label">AI @ S&amp;T</span>
+          </a>
+          <a class="ccard" href="#">
+            <span class="ccard-icon"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/icons/Archives and Special Collections.png" alt=""></span>
+            <span class="ccard-label">Archives and Special Collections</span>
+          </a>
+          <a class="ccard" href="#">
+            <span class="ccard-icon"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/icons/Conferences.png" alt=""></span>
+            <span class="ccard-label">Conferences</span>
+          </a>
+        </div>
+      </div>
+
+      <!-- BROWSE -->
+      <div class="section">
+        <div class="browse-head">
+          <h2>Research &amp; scholarship</h2>
+          <span class="follow">Follow</span>
+        </div>
+        <ul class="browse-links">
+          <li><a href="#">Research unit, center, or department</a></li>
+          <li><a href="#">Journals &amp; peer-reviewed series</a></li>
+        </ul>
+        <p class="lead">Scholars' Mine is a service of the Curtis Laws Wilson Library. Research and
+          scholarly output here is selected and deposited by university departments and centers across campus.</p>
+
+        <div class="glance">
+          <div>
+            <h3>At a glance</h3>
+            <div class="g-item"><a href="#">Top 10 downloads</a><span>All time</span></div>
+            <div class="g-item"><a href="#">Recent additions</a><span>20 most recent &middot; activity by year</span></div>
+          </div>
+          <div>
+            <h3>Paper of the day</h3>
+            <div class="g-item"><a href="#">Coming soon</a><span>A featured work, refreshed daily</span></div>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="footer-top">
+      <div class="footer-logo"><img src="https://raw.githubusercontent.com/userexec/mstelseviertheme/main/logos/vertical brief.png" alt="Missouri S&T"></div>
+      <nav>
+        <a href="#">Home</a><a href="#">About</a><a href="#">FAQ</a><a href="#">My Account</a><a href="#">Accessibility</a><br>
+        <a href="#">Privacy</a><a href="#">Copyright</a><a href="#">Digital Commons Network&trade;</a>
+      </nav>
+    </div>
+    <div class="copy">&copy; 2026 <a href="https://www.umsystem.edu/curators">The Curators of the University of Missouri</a><br><br>Elsevier concept &mdash; Colors, type, logo and pattern per <a href="https://brand.mst.edu">brand.mst.edu</a>. Placeholder content to be replaced with actual system outputs.<br>Full-resolution assets can be found at <a href="https://github.com/userexec/mstelseviertheme">https://github.com/userexec/mstelseviertheme</a>.</div>
+  </div>
+
+ </div>
+
+<script>
+// replace with whatever slideshow integration Elsevier supports
+(function(){
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  // slideshow
+  var hero=document.getElementById('hero');
+  if(hero){
+    var s=hero.querySelectorAll('.hslide'), d=hero.querySelectorAll('.hdot'),
+        cap=document.getElementById('heroCap'),
+        labels=[].map.call(s,function(x){return x.getAttribute('aria-label');}),
+        i=0,t=null,DELAY=5200;
+    function show(n){
+      s[i].classList.remove('is-active'); if(d[i])d[i].classList.remove('is-active');
+      i=(n+s.length)%s.length;
+      // re-trigger ken burns
+      var el=s[i]; el.classList.remove('is-active'); void el.offsetWidth; el.classList.add('is-active');
+      if(d[i])d[i].classList.add('is-active'); if(cap)cap.textContent=labels[i];
+    }
+    function nx(){show(i+1);} function start(){stop(); t=setInterval(nx,DELAY);} function stop(){if(t){clearInterval(t);t=null;}}
+    for(var k=0;k<d.length;k++){(function(x){d[x].addEventListener('click',function(){show(x);start();});})(k);}
+    hero.addEventListener('mouseenter',stop); hero.addEventListener('mouseleave',start); start();
+  }
+  // count-up
+  var nums=document.querySelectorAll('.num[data-count]');
+  function fmt(n){return n.toLocaleString('en-US');}
+  nums.forEach(function(el){
+    var target=parseInt(el.getAttribute('data-count'),10);
+    if(reduce){el.textContent=fmt(target)+(target>=1000000?'':''); if(target>=1000000)el.textContent=(target/1e6).toFixed(1)+'M'; return;}
+    var dur=1500, t0=null;
+    function step(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/dur,1); var v=Math.floor((1-Math.pow(1-p,3))*target);
+      el.textContent = target>=1000000 ? (v/1e6).toFixed(1)+'M' : fmt(v);
+      if(p<1) requestAnimationFrame(step); else el.textContent = target>=1000000 ? (target/1e6).toFixed(1)+'M' : fmt(target);
+    }
+    requestAnimationFrame(step);
+  });
+})();
+</script>
+</body>
+</html>

@@ -84,27 +84,8 @@ Allowable graphic patterns can be found at https://brand.mst.edu/elements/ and c
 
 ### Cover/header photo
 
-By request of the unit, a photo that should be prominently featured in this design is in "images/cover.jpg". Use of this photo does contradict Missouri S&T brand standards as it is not official photography, but this will be overlooked.
+By request of the unit, a photo that should be prominently featured in this design is in "images/cover.jpg". This is implemented as part of a slideshow instead of baked into the template to retain flexibility across collections and save screen space on pages where large graphics would be a distraction. Elsevier's support for slideshows is unknown--whatever is in the system should be used.
 
 ### Icons
 
-The page should prominently feature an icon in its body area. The icons are provided in the "icons" folder and named according to the text that should accompany them. For example, the icon "Theses and Dissertations.png" should be labeled "Theses and Dissertations".
-
-### Sidebar Placement
-
-Examples of different Elsevier Pure themes show the sidebar on either the left or the right. The sidebar for Missouri S&T should be on the left.
-
-### Mission Statements
-
-Optionally, the requestor has provided four statements that can be integrated into a concept, though they do not have to be. These are:
-
- - Increasing the visibility of S&T's research
- - Sharing the work of S&T with the world
- - Tracking impact and engagement of S&T's work
- - Preserving the scholarly and creating work of S&T
-
-These could, for example, be set out in four columns in a lower header area on a solid background. Either all four should be used or none. See what makes sense visually, and abandon these if they don't work well.
-
-### Other page features
-
-For the rest of the page's content and features, simply fill with whatever content commonly appears in the examples. For example, the sidebars always have a search box, so place a search box in the sidebar in the concept.
+The homepage should prominently feature an icon in its body area. The icons are provided in the "icons" folder and named according to the text that should accompany them. For example, the icon "Theses and Dissertations.png" should be labeled "Theses and Dissertations". Only 6 of the icons are used on the homepage. Others are presumably meant to feature on other pages as the system is populated.
